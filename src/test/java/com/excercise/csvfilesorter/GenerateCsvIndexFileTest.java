@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-class JoinSortedIndexFileTest {
+class GenerateCsvIndexFileTest {
 
     @Test
     public void shouldMerge2FilesInSplitDirectory() throws IOException, InterruptedException {
-        GenerateIndexFile joinSortedIndexFile = new GenerateIndexFile(1);
+        GenerateCSVIndexFile joinSortedIndexFile = new GenerateCSVIndexFile(1);
         joinSortedIndexFile.execute();
     }
 

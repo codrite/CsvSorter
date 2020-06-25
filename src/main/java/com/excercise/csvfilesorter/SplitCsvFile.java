@@ -10,7 +10,7 @@ import java.util.*;
 
 public class SplitCsvFile {
 
-    final static String TEMP_FILE = "split/TEMP";
+    final static String IDX_FILE = "index/TEMP";
 
     final String fileName;
     final Integer index;
@@ -28,25 +28,28 @@ public class SplitCsvFile {
             int fileCount = 0, lineCount = 1;
             while (bufferedReader.ready()) {
                 if (lines.size() == maxRecordsInMemory) {
-                    lines.sort(Comparator.naturalOrder());
+                    Collections.sort(lines);
                     writeToFile(fileCount++, lines);
                     lines.clear();
                 }
                 lines.add(new Line(bufferedReader.readLine().split(",")[index-1], lineCount++));
             }
 
-            if (lines.size() > 0)
+            if (lines.size() > 0) {
+                Collections.sort(lines);
                 writeToFile(fileCount, lines);
+            }
         }
     }
 
     void writeToFile(int fileCount, List<Line> lines) throws IOException {
-        String tempFileName = TEMP_FILE + "_" + fileCount + ".csv";
+        String tempFileName = IDX_FILE + "_" + fileCount + ".csv";
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(tempFileName), StandardOpenOption.CREATE_NEW)){
              for(Line eachLine : lines) {
                  bufferedWriter.write(eachLine.toString());
                  bufferedWriter.newLine();
              }
+             bufferedWriter.flush();
          }
     }
 
