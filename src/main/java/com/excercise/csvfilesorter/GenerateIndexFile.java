@@ -32,8 +32,8 @@ public class GenerateIndexFile {
             if (files.size() <= 1)
                 break;
 
-            CountDownLatch countDownLatch = new CountDownLatch(files.size()/2);
-            for (int i = 0; (i+1) < files.size(); i += 2)
+            CountDownLatch countDownLatch = new CountDownLatch(files.size() / 2);
+            for (int i = 0; (i + 1) < files.size(); i += 2)
                 executorService.submit(new MergeFiles(files.get(i), files.get(i + 1), countDownLatch));
 
             countDownLatch.await();
@@ -54,76 +54,71 @@ public class GenerateIndexFile {
 
         @Override
         public void run() {
-            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(SPLIT_INDEX_FILE_DIR + INDEX_FILE_NAME + "_" + System.currentTimeMillis()))) {
-                try (BufferedReader firstBufferedReader = Files.newBufferedReader(firstFile)) {
+            merge(firstFile, secondFile);
+        }
 
-                    boolean secondFileProcessComplete = false;
-                    boolean firstFileProcessComplete = false;
-                    while (firstBufferedReader.ready()) {
+        public void merge(Path first, Path second) {
+            final Path fileName = Paths.get(SPLIT_INDEX_FILE_DIR + INDEX_FILE_NAME + "_" + System.currentTimeMillis());
 
-                        String firstLine = firstBufferedReader.readLine();
-                        String firstString = firstLine.split(",")[0];
+            try {
+                long firstFileRows = getFileRowCount(first);
+                long secondFileRows = getFileRowCount(second);
 
-                        if (!secondFileProcessComplete) {
+                try (BufferedReader firstFileBufferedReader = Files.newBufferedReader(first);
+                     BufferedReader secondFileBufferedReader = Files.newBufferedReader(second);
+                     BufferedWriter bufferedWriter = Files.newBufferedWriter(fileName)) {
 
-                            try (BufferedReader secondBufferedReader = Files.newBufferedReader(secondFile)) {
-
-                                while (secondBufferedReader.ready()) {
-                                    String secondLine = secondBufferedReader.readLine();
-                                    String secondString = secondLine.split(",")[0];
-
-                                    while (!firstFileProcessComplete) {
-                                        if (secondString.compareTo(firstString) > 0) {
-                                            bufferedWriter.write(firstLine);
-                                            bufferedWriter.newLine();
-                                            if (!firstBufferedReader.ready()) {
-                                                firstFileProcessComplete = true;
-                                                break;
-                                            }
-
-                                            firstLine = firstBufferedReader.readLine();
-                                            firstString = firstLine.split(",")[0];
-                                        } else {
-                                            bufferedWriter.write(secondLine);
-                                            bufferedWriter.newLine();
-                                            if (!secondBufferedReader.ready())
-                                                break;
-
-                                            secondLine = secondBufferedReader.readLine();
-                                            secondString = secondLine.split(",")[0];
-                                        }
-                                    }
-
-                                    if(firstFileProcessComplete) {
-                                        bufferedWriter.write(secondLine);
-                                        bufferedWriter.newLine();
-                                    }
-
-                                }
-                                secondFileProcessComplete = true;
+                    String fRec = firstFileBufferedReader.readLine();
+                    String sRec = secondFileBufferedReader.readLine();
+                    if (firstFileRows >= secondFileRows) {
+                        do {
+                            if (fRec.compareToIgnoreCase(sRec) >= 0) {
+                                writeToFile(bufferedWriter, sRec);
+                                sRec = secondFileBufferedReader.readLine();
+                            } else {
+                                writeToFile(bufferedWriter, fRec);
+                                fRec = firstFileBufferedReader.readLine();
                             }
-
-                        }
-
-                        if(!firstFileProcessComplete) {
-                            bufferedWriter.write(firstLine);
-                            bufferedWriter.newLine();
-                        }
-
+                        } while(fRec != null && sRec != null);
                     }
+
+                    while(sRec != null) {
+                        writeToFile(bufferedWriter, sRec);
+                        sRec = secondFileBufferedReader.readLine();
+                    }
+
+                    while(fRec != null) {
+                        writeToFile(bufferedWriter, fRec);
+                        fRec = firstFileBufferedReader.readLine();
+                    }
+
+                } finally {
+                    Files.deleteIfExists(first);
+                    Files.deleteIfExists(second);
                 }
             } catch (IOException ioException) {
-                log.error("There was an error during reading/writting of intermediate outputs - {}", ioException.getMessage());
-            }
-            try {
-                Files.delete(firstFile);
-                Files.delete(secondFile);
-            } catch (IOException ioException) {
-                log.error("There was an error during deletion of intermediate outputs - {}", ioException.getMessage());
+                log.error(ioException.getMessage());
+                throw new IllegalArgumentException(ioException);
             } finally {
                 countDownLatch.countDown();
             }
         }
+
+        private long getFileRowCount(Path file) throws IOException {
+            try (BufferedReader bufferedReader = Files.newBufferedReader(file)) {
+                return bufferedReader.lines().count();
+            }
+        }
+
+        private void writeToFile(BufferedWriter fileName, String line) {
+            try {
+                fileName.write(line);
+                fileName.newLine();
+            } catch (IOException ioException) {
+                log.error(ioException.getMessage());
+            }
+        }
+
     }
 
 }
