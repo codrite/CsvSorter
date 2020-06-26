@@ -1,29 +1,31 @@
-package com.excercise.csvfilesorter;
+package com.excercise.csvfilesorter.step;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-public class SplitCsvFile {
+public class FirstStepIsToSplitTheCsvFile {
 
-    final static String IDX_FILE = "index/TEMP";
+    final static String IDX_FILE = "target/index/TEMP";
 
-    final String fileName;
+    final Path fileName;
     final Integer index;
     final Integer maxRecordsInMemory;
 
-    public SplitCsvFile(String fileName, Integer index, Integer maxLimit) {
+    public FirstStepIsToSplitTheCsvFile(Path fileName, Integer index, Integer maxLimit) {
         this.fileName = fileName;
         this.index = index;
         this.maxRecordsInMemory = maxLimit;
     }
 
+    // Complexity - o(n) * o(nlog(n))
     public void execute() throws IOException {
-        try(BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(fileName))) {
+        try(BufferedReader bufferedReader = Files.newBufferedReader(fileName)) {
             List<Line> lines = new LinkedList<>();
             int fileCount = 0, lineCount = 1;
             while (bufferedReader.ready()) {
@@ -42,6 +44,7 @@ public class SplitCsvFile {
         }
     }
 
+    // Complexity - o(n)
     void writeToFile(int fileCount, List<Line> lines) throws IOException {
         String tempFileName = IDX_FILE + "_" + fileCount + ".csv";
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(tempFileName), StandardOpenOption.CREATE_NEW)){

@@ -1,4 +1,4 @@
-package com.excercise.csvfilesorter;
+package com.excercise.csvfilesorter.step;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,21 +27,22 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
-public class CreateCSVIndexFile {
+public class SecondStepIsToCreateIndex {
 
-    final static String SPLIT_INDEX_FILE_DIR = "index/";
-    final static String INDEX_FILE_NAME = "index/FINAL";
+    final static String SPLIT_INDEX_FILE_DIR = "target/index/";
+    final static String INDEX_FILE_NAME = "target/index/FINAL";
 
     ExecutorService executorService;
 
     ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
     Set<Path> processed;
 
-    public CreateCSVIndexFile(int numberOfThreads) {
+    public SecondStepIsToCreateIndex(int numberOfThreads) {
         this.executorService = Executors.newFixedThreadPool(numberOfThreads);
         this.processed = new ConcurrentSkipListSet<>();
     }
 
+    // Complexity - o(n)
     public void execute() throws IOException, InterruptedException {
         List<Path> files = Files.list(Paths.get(SPLIT_INDEX_FILE_DIR)).collect(Collectors.toList());
 
@@ -84,6 +85,7 @@ public class CreateCSVIndexFile {
             merge(firstFile, secondFile, INDEX_FILE_NAME);
         }
 
+        // Complexity - o(nlog(n)) using merge sort for combining 2 files and creating a third file
         public void merge(Path first, Path second, String destination) {
             try {
                 if (Files.exists(Paths.get(destination)))

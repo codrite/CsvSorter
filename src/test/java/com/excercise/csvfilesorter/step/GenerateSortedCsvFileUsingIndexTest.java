@@ -1,6 +1,6 @@
-package com.excercise.csvfilesorter;
+package com.excercise.csvfilesorter.step;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,12 +9,12 @@ import java.nio.file.Paths;
 
 class GenerateSortedCsvFileUsingIndexTest {
 
-    @Test
-    public void shouldGenerateSortedCSVFile() throws IOException, InterruptedException {
+    @Disabled("Needs a index file prior run")
+    public void shouldGenerateSortedCSVFile() throws IOException {
         Path inputCsv = Paths.get("input/smallInput.csv");
         Path indexFile = Files.list(Paths.get("index")).findFirst().orElseThrow(() -> new IllegalArgumentException("No index directory found"));
         Path outputCsvFile = Paths.get("output/out_3_col.csv");
-        RecreateSortedCsvFileUsingIndex generateSortedCsvFileUsingIndex = new RecreateSortedCsvFileUsingIndex(inputCsv, indexFile, outputCsvFile);
+        ThirdStepIsToRebuildSortedCsvUsingIndex generateSortedCsvFileUsingIndex = new ThirdStepIsToRebuildSortedCsvUsingIndex(inputCsv, indexFile, outputCsvFile);
         generateSortedCsvFileUsingIndex.execute();
     }
 

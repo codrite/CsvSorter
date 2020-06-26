@@ -1,14 +1,14 @@
-package com.excercise.csvfilesorter;
+package com.excercise.csvfilesorter.step;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 
 class GenerateCsvIndexFileTest {
 
-    @Test
+    @Disabled
     public void shouldMerge2FilesInSplitDirectory() throws IOException, InterruptedException {
-        CreateCSVIndexFile joinSortedIndexFile = new CreateCSVIndexFile(1);
+        SecondStepIsToCreateIndex joinSortedIndexFile = new SecondStepIsToCreateIndex(1);
         joinSortedIndexFile.execute();
     }
 

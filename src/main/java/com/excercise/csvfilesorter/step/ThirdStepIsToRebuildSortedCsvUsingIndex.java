@@ -1,4 +1,4 @@
-package com.excercise.csvfilesorter;
+package com.excercise.csvfilesorter.step;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,22 +10,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*
- * Use the index file and rebuild the CSV file, sorted this time
- * on the index field
+ * Use the index file and rebuild the CSV file,
+ * sorted this time on the index field
  */
 @Slf4j
-public class RecreateSortedCsvFileUsingIndex {
+public class ThirdStepIsToRebuildSortedCsvUsingIndex {
 
     final Path inputCsvFile;
     final Path indexFile;
     final Path sortedCsvFile;
 
-    public RecreateSortedCsvFileUsingIndex(Path inputCsvFile, Path indexFile, Path sortedCsvFile) {
+    public ThirdStepIsToRebuildSortedCsvUsingIndex(Path inputCsvFile, Path indexFile, Path sortedCsvFile) {
         this.inputCsvFile = inputCsvFile;
         this.indexFile = indexFile;
         this.sortedCsvFile = sortedCsvFile;
     }
 
+    // Complexity - o(n^2)
     public void execute() throws IOException {
         List<Path> files = Files.list(indexFile).collect(Collectors.toList());
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(sortedCsvFile)) {
@@ -33,6 +34,7 @@ public class RecreateSortedCsvFileUsingIndex {
         }
     }
 
+    // Complexity - o(k)
     void writeToFile(BufferedWriter bufferedWriter, String line) {
         try {
             String lineString = Files.lines(inputCsvFile).skip(Long.parseLong(line.split(",")[1]) - 1).findFirst().orElseThrow(null);
