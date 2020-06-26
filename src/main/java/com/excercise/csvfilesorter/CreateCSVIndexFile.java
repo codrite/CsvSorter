@@ -8,17 +8,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
+/*
+ * Create an index file for sorting the (input) CSV source.
+ *
+ * Each row of the index file (also csv file) has a key (index element)
+ * and line number of the index element in the input CSV.
+ *
+ * The key is sorted (natural/ascending order) in the Index file.
+ */
+
 @Slf4j
-public class GenerateCSVIndexFile {
+public class CreateCSVIndexFile {
 
     final static String SPLIT_INDEX_FILE_DIR = "index/";
     final static String INDEX_FILE_NAME = "index/FINAL";
@@ -26,14 +35,14 @@ public class GenerateCSVIndexFile {
     ExecutorService executorService;
 
     ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+    Set<Path> processed;
 
-    public GenerateCSVIndexFile(int numberOfThreads) {
+    public CreateCSVIndexFile(int numberOfThreads) {
         this.executorService = Executors.newFixedThreadPool(numberOfThreads);
+        this.processed = new ConcurrentSkipListSet<>();
     }
 
     public void execute() throws IOException, InterruptedException {
-        Set<Path> processed = new HashSet<>();
-
         List<Path> files = Files.list(Paths.get(SPLIT_INDEX_FILE_DIR)).collect(Collectors.toList());
 
         while (true) {
@@ -54,10 +63,8 @@ public class GenerateCSVIndexFile {
         for (Path path : processed) {
             Files.deleteIfExists(path);
         }
-    }
 
-    public boolean isComplete() {
-        return executorService.isTerminated();
+        executorService.shutdown();
     }
 
     public class MergeFiles implements Runnable {
@@ -81,9 +88,6 @@ public class GenerateCSVIndexFile {
             try {
                 if (Files.exists(Paths.get(destination)))
                     destination = destination + "_" + System.currentTimeMillis();
-
-                //long firstFileRows = getFileRowCount(first);
-                //long secondFileRows = getFileRowCount(second);
 
                 try (BufferedReader firstFileBufferedReader = Files.newBufferedReader(first);
                      BufferedReader secondFileBufferedReader = Files.newBufferedReader(second);
@@ -117,12 +121,6 @@ public class GenerateCSVIndexFile {
                 throw new IllegalArgumentException(ioException);
             } finally {
                 countDownLatch.countDown();
-            }
-        }
-
-        private long getFileRowCount(Path file) throws IOException {
-            try (BufferedReader bufferedReader = Files.newBufferedReader(file)) {
-                return bufferedReader.lines().count();
             }
         }
 

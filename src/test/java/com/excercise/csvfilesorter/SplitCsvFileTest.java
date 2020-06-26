@@ -8,7 +8,7 @@ class SplitCsvFileTest {
 
     @Test
     public void shouldSplitCsvFileIntoSmallFilesOf10RecordsEach() throws IOException {
-        SplitCsvFile splitCsvFile = new SplitCsvFile("input/input.csv", 9, 10);
+        SplitCsvFile splitCsvFile = new SplitCsvFile("input/smallInput.csv", 9, 2);
         splitCsvFile.execute();
     }
 

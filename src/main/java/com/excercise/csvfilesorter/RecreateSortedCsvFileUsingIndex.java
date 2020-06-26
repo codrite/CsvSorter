@@ -6,23 +6,30 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
+/*
+ * Use the index file and rebuild the CSV file, sorted this time
+ * on the index field
+ */
 @Slf4j
-public class GenerateSortedCsvFileUsingIndex {
+public class RecreateSortedCsvFileUsingIndex {
 
     final Path inputCsvFile;
     final Path indexFile;
     final Path sortedCsvFile;
 
-    public GenerateSortedCsvFileUsingIndex(Path inputCsvFile, Path indexFile, Path sortedCsvFile) {
+    public RecreateSortedCsvFileUsingIndex(Path inputCsvFile, Path indexFile, Path sortedCsvFile) {
         this.inputCsvFile = inputCsvFile;
         this.indexFile = indexFile;
         this.sortedCsvFile = sortedCsvFile;
     }
 
     public void execute() throws IOException {
+        List<Path> files = Files.list(indexFile).collect(Collectors.toList());
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(sortedCsvFile)) {
-            Files.lines(indexFile).forEach(line -> writeToFile(bufferedWriter, line));
+            Files.lines(files.get(0)).forEach(line -> writeToFile(bufferedWriter, line));
         }
     }
 

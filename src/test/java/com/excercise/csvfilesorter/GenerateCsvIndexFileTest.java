@@ -8,7 +8,7 @@ class GenerateCsvIndexFileTest {
 
     @Test
     public void shouldMerge2FilesInSplitDirectory() throws IOException, InterruptedException {
-        GenerateCSVIndexFile joinSortedIndexFile = new GenerateCSVIndexFile(1);
+        CreateCSVIndexFile joinSortedIndexFile = new CreateCSVIndexFile(1);
         joinSortedIndexFile.execute();
     }
 
