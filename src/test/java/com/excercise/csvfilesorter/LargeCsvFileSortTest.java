@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/*
+    Sort an input csv with 10000 records
+ */
 public class LargeCsvFileSortTest {
 
     static Path inputPath = Paths.get("input/largeInput.csv");

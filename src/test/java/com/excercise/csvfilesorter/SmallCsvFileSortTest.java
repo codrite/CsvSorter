@@ -13,6 +13,10 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/*
+    Sort an input csv with 128 records
+ */
+
 public class SmallCsvFileSortTest {
 
     static Path inputPath = Paths.get("input/smallInput.csv");
