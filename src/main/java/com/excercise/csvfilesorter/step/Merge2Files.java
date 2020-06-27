@@ -36,6 +36,7 @@ public class Merge2Files implements Runnable {
         }
     }
 
+    // Complexity o(nlog(n))
     void execute() throws IOException {
         Path outputFileName = Paths.get(outputDir + "/" + UUID.randomUUID().toString().substring(0, 20) + "_" + System.currentTimeMillis() + ".csv");
 

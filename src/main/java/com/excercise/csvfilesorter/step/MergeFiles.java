@@ -26,6 +26,7 @@ public class MergeFiles {
         this.forkJoinPool = new ForkJoinPool(parallelism);
     }
 
+    // Complexity o(n)
     public void execute() throws IOException, InterruptedException {
         List<Path> allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toList());
         while (allFiles.size() > 1) {
