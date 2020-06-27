@@ -36,7 +36,7 @@ public class MergeFiles {
             while (fileToProcess >= 2) {
                 Path firstFile = iterator.next();
                 Path secondFile = iterator.next();
-                forkJoinPool.submit(ForkJoinTask.adapt(new Merge2Files(indexField, firstFile.toFile().getPath(), secondFile.toFile().getPath(), "target/index", countDownLatch)));
+                forkJoinPool.submit(ForkJoinTask.adapt(new Merge2Files(indexField, firstFile.toFile().getPath(), secondFile.toFile().getPath(), "staging", countDownLatch)));
                 fileToProcess -= 2;
             }
             countDownLatch.await();

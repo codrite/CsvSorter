@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class ParallelExtraLargeCsvFileSortTest {
 
     static Path inputPath = Paths.get("input/extraLargeInput.csv");
-    static Path indexPath = Paths.get("target/index");
+    static Path indexPath = Paths.get("staging");
 
     static Path outputPath = Paths.get("target/extraLargeOutput" + ".csv");
 

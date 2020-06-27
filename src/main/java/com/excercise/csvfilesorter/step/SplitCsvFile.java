@@ -11,7 +11,7 @@ import java.util.*;
 
 public class SplitCsvFile {
 
-    final static String IDX_FILE = "target/index/TEMP";
+    final static String STAGING_FILE = "staging/TEMP";
 
     final Path fileName;
     final Integer index;
@@ -47,7 +47,7 @@ public class SplitCsvFile {
 
     // Complexity - o(n)
     void writeToFile(int fileCount, List<Line> lines) throws IOException {
-        String tempFileName = IDX_FILE + "_" + fileCount + ".csv";
+        String tempFileName = STAGING_FILE + "_" + fileCount + ".csv";
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(tempFileName), StandardOpenOption.CREATE_NEW)){
              for(Line eachLine : lines) {
                  bufferedWriter.write(eachLine.getFullLineString());
