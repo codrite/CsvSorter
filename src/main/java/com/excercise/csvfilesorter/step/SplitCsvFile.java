@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-public class FirstStepIsToSplitTheCsvFile {
+public class SplitCsvFile {
 
     final static String IDX_FILE = "target/index/TEMP";
 
@@ -17,7 +17,7 @@ public class FirstStepIsToSplitTheCsvFile {
     final Integer index;
     final Integer maxRecordsInMemory;
 
-    public FirstStepIsToSplitTheCsvFile(Path fileName, Integer index, Integer maxLimit) {
+    public SplitCsvFile(Path fileName, Integer index, Integer maxLimit) {
         this.fileName = fileName;
         this.index = index;
         this.maxRecordsInMemory = maxLimit;
@@ -34,7 +34,8 @@ public class FirstStepIsToSplitTheCsvFile {
                     writeToFile(fileCount++, lines);
                     lines.clear();
                 }
-                lines.add(new Line(bufferedReader.readLine().split(",")[index-1], lineCount++));
+                String fullLine = bufferedReader.readLine();
+                lines.add(new Line(fullLine.split(",")[index-1], lineCount++, fullLine));
             }
 
             if (lines.size() > 0) {
@@ -49,7 +50,7 @@ public class FirstStepIsToSplitTheCsvFile {
         String tempFileName = IDX_FILE + "_" + fileCount + ".csv";
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(tempFileName), StandardOpenOption.CREATE_NEW)){
              for(Line eachLine : lines) {
-                 bufferedWriter.write(eachLine.toString());
+                 bufferedWriter.write(eachLine.getFullLineString());
                  bufferedWriter.newLine();
              }
              bufferedWriter.flush();
@@ -60,10 +61,12 @@ public class FirstStepIsToSplitTheCsvFile {
 
         String value;
         Integer lineNumber;
+        String fullLineString;
 
-        public Line(String value, Integer lineNumber) {
+        public Line(String value, Integer lineNumber, String fullLineString) {
             this.value = value;
             this.lineNumber = lineNumber;
+            this.fullLineString = fullLineString;
         }
 
         @Override
@@ -89,6 +92,11 @@ public class FirstStepIsToSplitTheCsvFile {
         public int hashCode() {
             return Objects.hash(value, lineNumber);
         }
+
+        public String getFullLineString() {
+            return this.fullLineString;
+        }
+
     }
 
 }

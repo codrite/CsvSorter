@@ -4,6 +4,7 @@ import com.excercise.csvfilesorter.step.SplitCsvFile;
 import com.excercise.csvfilesorter.step.MergeFiles;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -14,16 +15,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /*
-    Sort an input csv with 128 records
+    Sort an input csv with 1.5 million records
  */
 @Slf4j
-public class SmallCsvFileSortTest {
+public class ExtraLargeCsvFileSortTest {
 
-    static Path inputPath = Paths.get("input/smallInput.csv");
+    static Path inputPath = Paths.get("input/extraLargeInput.csv");
     static Path indexPath = Paths.get("target/index");
 
-    static Path outputPath = Paths.get("target/smallOutput" + ".csv");
-    static Integer INDEX_FIELD = 9;
+    static Path outputPath = Paths.get("target/extraLargeOutput" + ".csv");
+
+    static Integer INDEX_FIELD = 3;
 
     @BeforeAll
     public static void createFolders() throws IOException {
@@ -37,11 +39,11 @@ public class SmallCsvFileSortTest {
         }
     }
 
-    @Test
+    @Disabled("Github not allowing me to add +100mb csv file")
     public void shouldSortACsvFile() throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
-        new SplitCsvFile(inputPath, INDEX_FIELD, 10).execute();
+        new SplitCsvFile(inputPath, INDEX_FIELD, 100000).execute();
         log.info("Completed split step in {}", (System.currentTimeMillis() - startTime));
 
         startTime = System.currentTimeMillis();

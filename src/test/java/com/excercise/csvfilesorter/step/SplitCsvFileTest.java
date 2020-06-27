@@ -9,7 +9,7 @@ class SplitCsvFileTest {
 
     @Test
     public void shouldSplitCsvFileIntoSmallFilesOf10RecordsEach() throws IOException {
-        FirstStepIsToSplitTheCsvFile splitCsvFile = new FirstStepIsToSplitTheCsvFile(Paths.get("input/smallInput.csv"), 9, 2);
+        SplitCsvFile splitCsvFile = new SplitCsvFile(Paths.get("input/smallInput.csv"), 9, 2);
         splitCsvFile.execute();
     }
 

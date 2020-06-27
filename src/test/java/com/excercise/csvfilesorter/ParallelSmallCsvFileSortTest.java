@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
     Sort an input csv with 128 records
  */
 @Slf4j
-public class SmallCsvFileSortTest {
+public class ParallelSmallCsvFileSortTest {
 
     static Path inputPath = Paths.get("input/smallInput.csv");
     static Path indexPath = Paths.get("target/index");
@@ -41,12 +41,12 @@ public class SmallCsvFileSortTest {
     public void shouldSortACsvFile() throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
-        new SplitCsvFile(inputPath, INDEX_FIELD, 10).execute();
-        log.info("Completed split step in {}", (System.currentTimeMillis() - startTime));
+        new SplitCsvFile(inputPath, INDEX_FIELD, 20).execute();
+        log.info("Completed split step in {}", (System.currentTimeMillis() - startTime) + " milliseconds ");
 
         startTime = System.currentTimeMillis();
-        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 1).execute();
-        log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime));
+        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 2).execute();
+        log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime) + " milliseconds ");
     }
 
 }
