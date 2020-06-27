@@ -42,11 +42,11 @@ public class LargeCsvFileSortTest {
     public void shouldSortACsvFile() throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
-        new SplitCsvFile(inputPath, INDEX_FIELD, 10).execute();
+        new SplitCsvFile(inputPath, INDEX_FIELD, 5).execute();
         log.info("Completed split step in {}", (System.currentTimeMillis()-startTime));
 
         startTime = System.currentTimeMillis();
-        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 4).execute();
+        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 1).execute();
         log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime));
     }
 

@@ -41,7 +41,7 @@ public class SmallCsvFileSortTest {
     public void shouldSortACsvFile() throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
-        new SplitCsvFile(inputPath, INDEX_FIELD, 10).execute();
+        new SplitCsvFile(inputPath, INDEX_FIELD, 2).execute();
         log.info("Completed split step in {}", (System.currentTimeMillis() - startTime));
 
         startTime = System.currentTimeMillis();

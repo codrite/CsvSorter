@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -32,6 +33,7 @@ public class MergeFiles {
     // Complexity o(n)
     public void execute() throws IOException, InterruptedException {
         Set<Path> allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
+        Set<Path> removeFiles = new HashSet<>();
         while (allFiles.size() > 1) {
             Iterator<Path> iterator = allFiles.iterator();
             int fileToProcess = allFiles.size();
@@ -42,12 +44,16 @@ public class MergeFiles {
                 Path secondFile = iterator.next();
                 executorService.submit(new Merge2Files(indexField, firstFile.toFile().getPath(), secondFile.toFile().getPath(), "staging", countDownLatch));
                 fileToProcess -= 2;
+
+                removeFiles.add(firstFile);
+                removeFiles.add(secondFile);
             }
             countDownLatch.await();
 
-            for (Path eachFile : allFiles)
+            for (Path eachFile : removeFiles)
                 Files.delete(eachFile);
 
+            removeFiles.clear();
             allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
         }
         executorService.shutdown();
