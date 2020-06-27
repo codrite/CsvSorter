@@ -14,16 +14,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /*
-    Sort an input csv with 128 records
+    Sort an input csv with 10000 records
  */
 @Slf4j
-public class SmallCsvFileSortTest {
+public class ParallelLargeCsvFileSortTest {
 
-    static Path inputPath = Paths.get("input/smallInput.csv");
+    static Path inputPath = Paths.get("input/largeInput.csv");
     static Path indexPath = Paths.get("target/index");
 
-    static Path outputPath = Paths.get("target/smallOutput" + ".csv");
-    static Integer INDEX_FIELD = 9;
+    static Path outputPath = Paths.get("target/largeOutput" + ".csv");
+
+    static Integer INDEX_FIELD = 3;
 
     @BeforeAll
     public static void createFolders() throws IOException {
@@ -41,12 +42,12 @@ public class SmallCsvFileSortTest {
     public void shouldSortACsvFile() throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
-        new SplitCsvFile(inputPath, INDEX_FIELD, 10).execute();
-        log.info("Completed split step in {}", (System.currentTimeMillis() - startTime));
+        new SplitCsvFile(inputPath, INDEX_FIELD, 20).execute();
+        log.info("Completed split step in {}", (System.currentTimeMillis()-startTime) + " milliseconds ");
 
         startTime = System.currentTimeMillis();
-        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 1).execute();
-        log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime));
+        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 2).execute();
+        log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime) + " milliseconds ");
     }
 
 }
