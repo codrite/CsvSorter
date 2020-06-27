@@ -38,7 +38,7 @@ public class Merge2Files implements Runnable {
 
     // Complexity o(nlog(n))
     void execute() throws IOException {
-        Path outputFileName = Paths.get(outputDir + "/" + UUID.randomUUID().toString().substring(0, 20) + "_" + System.currentTimeMillis() + ".csv");
+        Path outputFileName = Paths.get(outputDir + "/" + UUID.randomUUID().toString() + "_" + System.nanoTime() + ".csv");
 
         Path firstFilePath = Paths.get(firstFile);
         Path secondFilePath = Paths.get(secondFile);
@@ -85,9 +85,6 @@ public class Merge2Files implements Runnable {
             }
         } finally {
             countDownLatch.countDown();
-
-            Files.deleteIfExists(firstFilePath);
-            Files.deleteIfExists(secondFilePath);
         }
     }
 

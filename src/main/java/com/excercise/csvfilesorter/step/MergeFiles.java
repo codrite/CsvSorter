@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
+import java.util.Set;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -17,18 +16,18 @@ public class MergeFiles {
     private final Integer indexField;
     private final String inputDir;
     private final String outputFile;
-    ForkJoinPool forkJoinPool;
+    ExecutorService executorService;
 
     public MergeFiles(Integer indexField, String inputDir, String outputFile, int parallelism) {
         this.indexField = indexField;
         this.inputDir = inputDir;
         this.outputFile = outputFile;
-        this.forkJoinPool = new ForkJoinPool(parallelism);
+        this.executorService = Executors.newFixedThreadPool(parallelism);
     }
 
     // Complexity o(n)
     public void execute() throws IOException, InterruptedException {
-        List<Path> allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toList());
+        Set<Path> allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
         while (allFiles.size() > 1) {
             Iterator<Path> iterator = allFiles.iterator();
             int fileToProcess = allFiles.size();
@@ -37,15 +36,18 @@ public class MergeFiles {
             while (fileToProcess >= 2) {
                 Path firstFile = iterator.next();
                 Path secondFile = iterator.next();
-                forkJoinPool.submit(ForkJoinTask.adapt(new Merge2Files(indexField, firstFile.toFile().getPath(), secondFile.toFile().getPath(), "staging", countDownLatch)));
+                executorService.submit(new Merge2Files(indexField, firstFile.toFile().getPath(), secondFile.toFile().getPath(), "staging", countDownLatch));
                 fileToProcess -= 2;
             }
             countDownLatch.await();
 
-            allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toList());
+            for(Path eachFile : allFiles)
+                Files.delete(eachFile);
+
+            allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
         }
 
-        Files.copy(allFiles.get(0), Paths.get(outputFile), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(allFiles.iterator().next(), Paths.get(outputFile), StandardCopyOption.REPLACE_EXISTING);
     }
 
 }
