@@ -8,7 +8,7 @@ class MergeFilesTest {
 
     @Test
     public void shouldMergeFilesInDirectory() throws IOException, InterruptedException {
-        new MergeFiles(9,"target/index", "target/output.csv", 1).execute();
+        new MergeFiles(9,"staging", "target/output.csv", 1).execute();
     }
 
 }

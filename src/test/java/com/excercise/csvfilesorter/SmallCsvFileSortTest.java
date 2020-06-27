@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 public class SmallCsvFileSortTest {
 
     static Path inputPath = Paths.get("input/smallInput.csv");
-    static Path indexPath = Paths.get("target/index");
+    static Path stagingPath = Paths.get("staging");
 
     static Path outputPath = Paths.get("target/smallOutput" + ".csv");
     static Integer INDEX_FIELD = 9;
 
     @BeforeAll
     public static void createFolders() throws IOException {
-        if (Files.notExists(indexPath))
-            Files.createDirectory(indexPath);
+        if (Files.notExists(stagingPath))
+            Files.createDirectory(stagingPath);
         else {
-            Set<Path> files = Files.list(indexPath).collect(Collectors.toSet());
+            Set<Path> files = Files.list(stagingPath).collect(Collectors.toSet());
             for (Path eachFile : files) {
                 Files.delete(eachFile);
             }
@@ -45,7 +45,7 @@ public class SmallCsvFileSortTest {
         log.info("Completed split step in {}", (System.currentTimeMillis() - startTime));
 
         startTime = System.currentTimeMillis();
-        new MergeFiles(INDEX_FIELD, indexPath.toFile().getPath(), outputPath.toFile().getPath(), 1).execute();
+        new MergeFiles(INDEX_FIELD, stagingPath.toFile().getPath(), outputPath.toFile().getPath(), 1).execute();
         log.info("Completed building sorted CSV step in {}", (System.currentTimeMillis() - startTime));
     }
 
