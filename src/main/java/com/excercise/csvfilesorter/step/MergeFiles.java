@@ -3,11 +3,15 @@ package com.excercise.csvfilesorter.step;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -41,13 +45,15 @@ public class MergeFiles {
             }
             countDownLatch.await();
 
-            for(Path eachFile : allFiles)
+            for (Path eachFile : allFiles)
                 Files.delete(eachFile);
 
             allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
         }
+        executorService.shutdown();
 
         Files.copy(allFiles.iterator().next(), Paths.get(outputFile), StandardCopyOption.REPLACE_EXISTING);
+
     }
 
 }
