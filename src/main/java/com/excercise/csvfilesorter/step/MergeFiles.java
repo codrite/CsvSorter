@@ -30,7 +30,7 @@ public class MergeFiles {
         this.executorService = Executors.newFixedThreadPool(parallelism);
     }
 
-    // Complexity o(n)
+    // Complexity o(n^2)
     public void execute() throws IOException, InterruptedException {
         Set<Path> allFiles = Files.list(Paths.get(inputDir)).collect(Collectors.toSet());
         Set<Path> removeFiles = new HashSet<>();

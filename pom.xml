@@ -11,7 +11,7 @@
     <groupId>com.excercise</groupId>
     <artifactId>csv-file-sorter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>csv-file-sorter</name>
+    <name>CsvSorter</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
