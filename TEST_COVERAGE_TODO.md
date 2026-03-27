@@ -15,12 +15,14 @@
 - [ ] Test with an out-of-range index field to document `ArrayIndexOutOfBoundsException` behavior
 
 ### Merge2Files — Enable and expand merge tests
-- [ ] Enable the disabled `shouldMerge2Files()` test using `@TempDir` for dynamic file creation
-- [ ] Test merging two sorted files and verify output order
-- [ ] Test merging files of unequal length
+- [x] Enable the disabled `shouldMerge2Files()` test using `@TempDir` for dynamic file creation
+- [x] Test merging two sorted files and verify output order
+- [x] Test merging files of unequal length
 - [ ] Test merging an empty file with a non-empty file
-- [ ] Test merging files with duplicate keys
-- [ ] Test behavior when input files don't exist
+- [x] Test merging files with duplicate keys
+- [x] Test behavior when input files don't exist
+- [x] Test `run()` delegates to `execute()` correctly
+- [x] Test `isGreater()` with equal values
 
 ### MergeFiles — Add assertions and edge cases
 - [ ] Add assertions to existing test to verify final output file exists and is correctly sorted
