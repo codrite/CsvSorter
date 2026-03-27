@@ -25,10 +25,11 @@
 - [x] Test `isGreater()` with equal values
 
 ### MergeFiles — Add assertions and edge cases
-- [ ] Add assertions to existing test to verify final output file exists and is correctly sorted
-- [ ] Test with a single input file (should copy without merging)
-- [ ] Test with an odd number of input files (unpaired file in a merge round)
-- [ ] Verify staging directory cleanup after execution
+- [x] Add assertions to existing test to verify final output file exists and is correctly sorted
+- [x] Test with a single input file (should copy without merging)
+- [x] Test with an odd number of input files (unpaired file in a merge round)
+- [x] Verify staging directory cleanup after execution
+- [x] Test parallel merge with multiple threads
 
 ## Medium Priority
 
