@@ -3,13 +3,14 @@
 ## High Priority
 
 ### SplitCsvFile — Unit tests for core sorting logic
-- [ ] Add unit tests for `Line.compareTo()` with various string orderings
-- [ ] Add unit tests for `Line.equals()` and `Line.hashCode()`
-- [ ] Verify output chunks are actually sorted after `execute()`
+- [x] Add unit tests for `Line.compareTo()` with various string orderings
+- [x] Add unit tests for `Line.equals()` and `Line.hashCode()`
+- [x] Verify output chunks are actually sorted after `execute()`
 - [ ] Test with an empty input file
-- [ ] Test with a single-line input file
-- [ ] Test with fewer rows than `maxRecordsInMemory`
-- [ ] Test with duplicate values in the sort column
+- [x] Test with a single-line input file
+- [x] Test with fewer rows than `maxRecordsInMemory`
+- [x] Test with duplicate values in the sort column
+- [x] Test sorting by different column index
 - [ ] Test CSV values containing commas and quotes
 - [ ] Test with an out-of-range index field to document `ArrayIndexOutOfBoundsException` behavior
 
